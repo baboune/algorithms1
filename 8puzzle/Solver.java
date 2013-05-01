@@ -42,5 +42,8 @@ public class Solver {
         
         //test manhattan()
         StdOut.println("manhattan: " + initial.manhattan());
+        
+        //test isGoal()
+        StdOut.println("isgoal: " + initial.isGoal());
     }
 }

@@ -51,11 +51,21 @@ public class Board {
         return sum;
     }
     
-//    // is this board the goal board?
-//    public boolean isGoal() {
-//
-//    }
-//    
+    // is this board the goal board?
+    public boolean isGoal() {
+        int expected_block_value = 1;
+        for (int row = 0; row < dimension; row++) {
+            for (int col = 0; col < dimension; col++) {
+                if (blocks[row][col] != expected_block_value
+                   && (row != dimension - 1 || col != dimension - 1)) {
+                    return false;
+                }
+                expected_block_value++;
+            }
+        }
+        return true;
+    }
+    
 //    // a board obtained by exchanging two adjacent blocks in the same row
 //    public Board twin() {
 //
