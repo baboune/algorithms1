@@ -48,5 +48,9 @@ public class Solver {
         
         //test twin()
         StdOut.println("twin: " + initial.twin().toString());
+        
+        //test equals()
+        StdOut.println("equals self should be true: " + initial.equals(initial));
+        StdOut.println("equals twin should be false: " + initial.equals(initial.twin()));
     }
 }

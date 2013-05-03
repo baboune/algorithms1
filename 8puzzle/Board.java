@@ -100,11 +100,23 @@ public class Board {
         return copy;
     }
     
-//    // does this board equal y?
-//    public boolean equals(Object y) {
-//
-//    }
-//    
+    // does this board equal y?
+    public boolean equals(Object y) {
+        if (y == this) return true;
+        if (y == null) return false;
+        if (y.getClass() != this.getClass());
+        Board that = (Board) y;
+        if (this.blocks.length != that.blocks.length) return false;
+        for (int row = 0; row < dimension; row++) {
+            for (int col = 0; col < dimension; col++) {
+                if (this.blocks[row][col] != that.blocks[row][col]) {
+                    return false;
+                }   
+            }
+        }
+        return true;
+    }
+    
 //    // all neighboring boards
 //    public Iterable<Board> neighbors() {
 //
