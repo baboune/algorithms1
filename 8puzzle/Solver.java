@@ -45,5 +45,8 @@ public class Solver {
         
         //test isGoal()
         StdOut.println("isgoal: " + initial.isGoal());
+        
+        //test twin()
+        StdOut.println("twin: " + initial.twin().toString());
     }
 }

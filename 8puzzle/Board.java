@@ -66,11 +66,40 @@ public class Board {
         return true;
     }
     
-//    // a board obtained by exchanging two adjacent blocks in the same row
-//    public Board twin() {
-//
-//    }
-//    
+    // a board obtained by exchanging two adjacent blocks in the same row
+    public Board twin() {
+        int[][] copy = copySquareArray(blocks);
+        int value;
+        int next_value;
+        outerloop:
+        for (int row = 0; row < dimension; row++) {
+            // don't iterate the last column
+            for (int col = 0; col < dimension - 1; col++) {
+                value = copy[row][col];
+                next_value = copy[row][col+1];
+                // swap if both are not zero
+                if (value != 0 && next_value != 0) {
+                    copy[row][col] = next_value;
+                    copy[row][col+1] = value;
+                    break outerloop;
+                }
+            }
+        }
+        Board twin = new Board(copy);        
+        return twin;
+    }
+    
+    // copy a square array
+    private int[][] copySquareArray(int[][] original) {
+        int len = original.length;
+        int[][] copy = new int[len][len];
+        for (int row = 0; row < len; row++) {
+            for (int col = 0; col < len; col++)
+                copy[row][col] = original[row][col];
+        }
+        return copy;
+    }
+    
 //    // does this board equal y?
 //    public boolean equals(Object y) {
 //
