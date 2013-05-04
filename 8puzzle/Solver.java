@@ -47,10 +47,12 @@ public class Solver {
         StdOut.println("isgoal: " + initial.isGoal());
         
         //test twin()
-        StdOut.println("twin: " + initial.twin().toString());
+        StdOut.println("twin: \n" + initial.twin().toString());
         
         //test equals()
         StdOut.println("equals self should be true: " + initial.equals(initial));
         StdOut.println("equals twin should be false: " + initial.equals(initial.twin()));
+        
+        StdOut.println("neighbors: \n" + initial.neighbors());
     }
 }

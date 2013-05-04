@@ -117,11 +117,51 @@ public class Board {
         return true;
     }
     
-//    // all neighboring boards
-//    public Iterable<Board> neighbors() {
-//
-//    }
-//    
+    // all neighboring boards
+    public Iterable<Board> neighbors() {
+        Queue<Board> q = new Queue<Board>();
+        // find zero
+        int row = 0;
+        int col = 0;
+        outerloop:
+        for (row = 0; row < dimension; row++) {
+            for (col = 0; col < dimension; col++) {
+                if (blocks[row][col] == 0) {
+                    break outerloop;
+                }
+            }
+        }
+        if (row > 0) {
+            // swap 0 with top tile
+            Board neighbor = swap(row, col, row - 1, col);
+            q.enqueue(neighbor);
+        }
+        if (col > 0) {
+            // swap 0 with left
+            Board neighbor = swap(row, col, row, col - 1);
+            q.enqueue(neighbor);            
+        }
+        if (row < dimension - 1) {
+            // swap 0 with bottom tile
+            Board neighbor = swap(row, col, row + 1, col);
+            q.enqueue(neighbor);            
+        }
+        if (col < dimension - 1) {
+            // swap 0 with right tile
+            Board neighbor = swap(row, col, row, col + 1);
+            q.enqueue(neighbor);            
+        }
+        return q;
+    }
+    
+    private Board swap(int old_zero_row, int old_zero_col, int new_zero_row, int new_zero_col) {
+        int[][] copy = copySquareArray(blocks);
+        copy[old_zero_row][old_zero_col] = blocks[new_zero_row][new_zero_col];
+        copy[new_zero_row][new_zero_col] = 0;
+        Board neighbor = new Board(copy);
+        return neighbor;
+    }
+    
     // string representation of the board (in the output format specified below)
     public String toString() {
         StringBuilder s = new StringBuilder();
