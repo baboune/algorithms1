@@ -1,7 +1,7 @@
 public class Board {
     
-    private int[][] blocks;
-    private int dimension;
+    private final int[][] blocks;
+    private final int dimension;
 
     // construct a board from an N-by-N array of blocks
     // (where blocks[i][j] = block in row i, column j)
@@ -137,7 +137,7 @@ public class Board {
             q.enqueue(neighbor);
         }
         if (col > 0) {
-            // swap 0 with left
+            // swap 0 with left tile
             Board neighbor = swap(row, col, row, col - 1);
             q.enqueue(neighbor);            
         }

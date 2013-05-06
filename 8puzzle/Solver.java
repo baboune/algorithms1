@@ -1,24 +1,86 @@
 public class Solver {
+    private SearchNode result;
+    
+    private class SearchNode implements Comparable<SearchNode> {
+        private final Board board;
+        private final int moves;
+        private final SearchNode previous_node;
+        private final int priority;
+        
+        private SearchNode(Board b, SearchNode p) {
+            board = b;
+            previous_node = p;
+            if (previous_node == null) {
+                moves = 0;
+            } else {
+                moves = previous_node.moves + 1;
+            }
+            priority = board.manhattan() + moves;
+        }
+        
+        public int compareTo(SearchNode that) {
+            return this.priority - that.priority;
+        }
+    }
     
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
-
+        MinPQ<SearchNode> pq = new MinPQ<SearchNode>();
+        MinPQ<SearchNode> twin_pq = new MinPQ<SearchNode>();
+        pq.insert(new SearchNode(initial, null));
+        twin_pq.insert(new SearchNode(initial.twin(), null));
+        while (true) {
+            SearchNode lowest_priority_node = pq.delMin();
+            SearchNode twin_lowest_priority_node = twin_pq.delMin();
+            if (lowest_priority_node.board.isGoal()) {
+                result = lowest_priority_node;
+                break;
+            }
+            if (twin_lowest_priority_node.board.isGoal()) {
+                result = null;
+                break;
+            }
+            for (Board neighbor: lowest_priority_node.board.neighbors()) {
+                // critical optimization
+                if (lowest_priority_node.previous_node == null || !neighbor.equals(lowest_priority_node.previous_node.board)) {
+                    pq.insert(new SearchNode(neighbor, lowest_priority_node));
+                }
+            }
+            for (Board neighbor: twin_lowest_priority_node.board.neighbors()) {
+                // critical optimization
+                if (twin_lowest_priority_node.previous_node == null || !neighbor.equals(twin_lowest_priority_node.previous_node.board)) {
+                    twin_pq.insert(new SearchNode(neighbor, twin_lowest_priority_node));
+                }
+            }
+        }
     }
 
-//    // is the initial board solvable?
-//    public boolean isSolvable() {
-//
-//    }
-//
-//    // min number of moves to solve initial board; -1 if no solution
-//    public int moves() {
-//
-//    }
-//
-//    // sequence of boards in a shortest solution; null if no solution
-//    public Iterable<Board> solution() {
-//
-//    }
+    // is the initial board solvable?
+    public boolean isSolvable() {
+        return result != null;
+    }
+
+    // min number of moves to solve initial board; -1 if no solution
+    public int moves() {
+        if (result != null) {
+            return result.moves;
+        }
+        return -1;
+    }
+
+    // sequence of boards in a shortest solution; null if no solution
+    public Iterable<Board> solution() {
+        if (result == null) {
+            return null;
+        }
+        Stack<Board> s = new Stack<Board>();
+        SearchNode n = result;
+        while (n != null) {
+            s.push(n.board);
+            n = n.previous_node;
+        }
+        return s;
+    }
     
     // solve a slider puzzle (given below)
     public static void main(String[] args) {
@@ -31,28 +93,40 @@ public class Solver {
             blocks[i][j] = in.readInt();
         Board initial = new Board(blocks);
         
-        //test toString()
-        StdOut.println(initial.toString());
+        // solve the puzzle
+        Solver solver = new Solver(initial);
         
-        //test dimension()
-        StdOut.println("dimension: " + initial.dimension());
+        // print solution to standard output
+        if (!solver.isSolvable())
+            StdOut.println("No solution possible");
+        else {
+            StdOut.println("Minimum number of moves = " + solver.moves());
+            for (Board board : solver.solution())
+                StdOut.println(board);
+        }
         
-        //test hamming()
-        StdOut.println("hamming: " + initial.hamming());
-        
-        //test manhattan()
-        StdOut.println("manhattan: " + initial.manhattan());
-        
-        //test isGoal()
-        StdOut.println("isgoal: " + initial.isGoal());
-        
-        //test twin()
-        StdOut.println("twin: \n" + initial.twin().toString());
-        
-        //test equals()
-        StdOut.println("equals self should be true: " + initial.equals(initial));
-        StdOut.println("equals twin should be false: " + initial.equals(initial.twin()));
-        
-        StdOut.println("neighbors: \n" + initial.neighbors());
+//        //test toString()
+//        StdOut.println(initial.toString());
+//        
+//        //test dimension()
+//        StdOut.println("dimension: " + initial.dimension());
+//        
+//        //test hamming()
+//        StdOut.println("hamming: " + initial.hamming());
+//        
+//        //test manhattan()
+//        StdOut.println("manhattan: " + initial.manhattan());
+//        
+//        //test isGoal()
+//        StdOut.println("isgoal: " + initial.isGoal());
+//        
+//        //test twin()
+//        StdOut.println("twin: \n" + initial.twin().toString());
+//        
+//        //test equals()
+//        StdOut.println("equals self should be true: " + initial.equals(initial));
+//        StdOut.println("equals twin should be false: " + initial.equals(initial.twin()));
+//        
+//        StdOut.println("neighbors: \n" + initial.neighbors());
     }
 }
